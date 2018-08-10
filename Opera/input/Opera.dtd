@@ -1,0 +1,90 @@
+
+<!ELEMENT 	Service EMPTY>
+<!ATTLIST 	Service name ID #REQUIRED>
+<!ATTLIST 	Service canMigrate (true|false) 'false'>
+<!ATTLIST 	Service runsInContainer IDREF #REQUIRED>
+
+<!ELEMENT	 Demand EMPTY>
+<!ATTLIST    Demand CPUDemand CDATA #REQUIRED>
+<!ATTLIST    Demand DiskDemand CDATA #REQUIRED>
+<!ATTLIST    Demand OtherDemand CDATA #IMPLIED> 
+
+<!ELEMENT    Call (Demand)>
+<!ATTLIST    Call type (s|a|f) 's'>
+<!ATTLIST    Call caller IDREF #REQUIRED>
+<!ATTLIST    Call callee IDREF #REQUIRED>
+<!ATTLIST    Call invocations CDATA #REQUIRED>
+<!ATTLIST    Call bytesSent CDATA #IMPLIED>
+<!ATTLIST    Call bytesReceived CDATA #IMPLIED>
+
+<!ELEMENT 	Scenario (Call+)>
+<!ATTLIST 	Scenario name CDATA #REQUIRED>
+<!ATTLIST 	Scenario triggeredByService IDREF #REQUIRED>
+
+
+<!ELEMENT 	Scenarios (ServiceDescription?,Services,ScenarioDescription?,Scenario+)>
+<!ELEMENT 	ServiceDescription (#PCDATA)> 
+<!ELEMENT 	ScenarioDescription (#PCDATA)>
+<!ELEMENT 	Services (Service+)>
+
+
+<!ELEMENT   Node EMPTY>
+<!ATTLIST   Node  name ID #REQUIRED>
+<!ATTLIST   Node  CPURatio CDATA #REQUIRED>
+<!ATTLIST   Node  DiskRatio CDATA #REQUIRED>
+<!ATTLIST   Node  DiskParallelism CDATA '1'>
+<!ATTLIST   Node  CPUParallelism CDATA '1'>
+<!ATTLIST   Node  type (server|client|delay) 'server'>
+
+<!ELEMENT   Container EMPTY>
+<!ATTLIST   Container  name ID #REQUIRED> 
+<!ATTLIST   Container  runsOnNode IDREF #REQUIRED>
+<!ATTLIST   Container  server (true|false) 'true'>
+<!ATTLIST   Container  parallelism CDATA '1000'>  
+<!ATTLIST 	Container  canMigrate (true|false) 'false'>
+<!ELEMENT 	Middlware  EMPTY>
+<!ATTLIST   Middlware  name ID #REQUIRED>
+<!ATTLIST   Middlware  fixedOverheadSend CDATA '20'>
+<!ATTLIST   Middlware  fixedOverheadReceive CDATA '20'>
+<!ATTLIST   Middlware  overheadPerByteSent CDATA '2'>
+<!ATTLIST   Middlware  overheadPerByteReceived CDATA '2'>
+
+<!ELEMENT 	Network EMPTY>
+<!ATTLIST   Network  name ID #REQUIRED>
+<!ATTLIST   Network  latency CDATA '100'>
+<!ATTLIST   Network  overheadPerByte CDATA '0.002'>
+<!ATTLIST   Network  connectsNodes IDREFS #REQUIRED>
+
+<!ELEMENT   Cluster (ContainerDescription?, Container+)>
+<!ATTLIST   Cluster name ID #REQUIRED> 
+
+<!ELEMENT Topology (NodeDescription?, Node+, Cluster+,  MiddlwareDescription?, Middlware+, NetworkDescription?, Network+)>
+<!ELEMENT NodeDescription (#PCDATA)>
+<!ELEMENT ContainerDescription (#PCDATA)>
+<!ELEMENT MiddlwareDescription (#PCDATA)>
+<!ELEMENT NetworkDescription (#PCDATA)>
+   
+   
+<!ELEMENT ThinkTimes  (ThinkTime+)>
+<!ELEMENT ThinkTime  EMPTY>
+<!ATTLIST ThinkTime scenario CDATA #REQUIRED>
+<!ATTLIST ThinkTime time CDATA #REQUIRED>
+
+<!ELEMENT ResponseTime EMPTY>
+<!ATTLIST ResponseTime scenario CDATA  #REQUIRED>
+<!ATTLIST ResponseTime minResponseTime CDATA   '0'>
+<!ATTLIST ResponseTime maxResponseTime CDATA  #REQUIRED>
+
+<!ELEMENT Requirements  (ResponseTime+)>
+<!ELEMENT WorkloadMixes (Mix*)>
+<!ATTLIST WorkloadMixes openModel (true|false) 'false'>
+<!ELEMENT Mix EMPTY>
+<!ATTLIST Mix scenario CDATA #REQUIRED>
+<!ATTLIST Mix load CDATA #REQUIRED>
+<!ELEMENT Users (#PCDATA)>
+
+<!ELEMENT Workloads (Users, WorkloadMixes+, ThinkTimes)>
+<!ATTLIST Workloads kind (HL|ML|VHL) 'ML'>
+
+<!ELEMENT Model (Scenarios, Topology, Workloads, Requirements)>
+ 

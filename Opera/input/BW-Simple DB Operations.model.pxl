@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE Model SYSTEM "Opera.dtd">
+<Model>
+	<Scenarios>
+		<Services>
+			<Service canMigrate="false" name="Browser0" runsInContainer="ClientContainer0"/>
+            <Service canMigrate="false" name="Browser1" runsInContainer="ClientContainer1"/>		
+			<!-- <Service canMigrate="false" name="Proxy" runsInContainer="ProxyContainer"/> --> 
+            <!-- <Service canMigrate="false" name="DelayCenter0" runsInContainer="DelayContainer0"/>
+            <Service canMigrate="false" name="DelayCenter1" runsInContainer="DelayContainer1"/> -->
+            <Service canMigrate="false" name="LBServer" runsInContainer="LBContainer"/>
+			<Service canMigrate="false" name="WebServer" runsInContainer="WebContainer"/>
+			<Service canMigrate="false" name="Database" runsInContainer="DataContainer"/>
+ 			<Service canMigrate="false" name="CloudDelay0" runsInContainer="CloudContainer0"/>
+ 			<Service canMigrate="false" name="CloudDelay1" runsInContainer="CloudContainer1"/>					
+		</Services>
+
+		<Scenario name="select 0" triggeredByService="Browser0">
+			<!-- <Call bytesReceived="0" bytesSent="0" caller="Browser0" callee="DelayCenter0" invocations="1" type="s">
+				<Demand CPUDemand="0.27" DiskDemand="0" />
+			</Call> -->		
+			 <!-- <Call bytesReceived="0" bytesSent="0" caller="DelayCenter0" callee="Proxy" invocations="1" type="s">
+				<Demand CPUDemand="18.29" DiskDemand="0" />
+			</Call> --> 
+			<!-- we should never use "f" as type -->
+			<Call bytesReceived="0" bytesSent="0" caller="Browser0" callee="LBServer" invocations="1" type="s">
+				<Demand CPUDemand="1.35177" DiskDemand="0" />
+			</Call>	
+			<Call bytesReceived="0" bytesSent="0" caller="LBServer" callee="WebServer" invocations="1" type="s">
+                <Demand CPUDemand="8.24881" DiskDemand="0" />
+            </Call>
+			<Call bytesReceived="0" bytesSent="0" caller="WebServer" callee="Database" invocations="1" type="s">
+				<Demand CPUDemand="0.83102" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" caller="Database" callee="CloudDelay0" invocations="1" type="s">
+				<Demand CPUDemand="6.95092" DiskDemand="0" />
+			</Call>
+			</Scenario>
+            
+            <Scenario name="select 1" triggeredByService="Browser1">
+			<!-- <Call bytesReceived="0" bytesSent="0" caller="Browser1" callee="DelayCenter1" invocations="1" type="s">
+				<Demand CPUDemand="0.27" DiskDemand="0" />
+			</Call> -->		
+			 <!-- <Call bytesReceived="0" bytesSent="0" caller="DelayCenter1" callee="Proxy" invocations="1" type="s">
+				<Demand CPUDemand="18.29" DiskDemand="0" />
+			</Call> --> 
+			<!-- we should never use "f" as type -->
+			<Call bytesReceived="0" bytesSent="0" caller="Browser1" callee="LBServer" invocations="1" type="s">
+				<Demand CPUDemand="1.35159" DiskDemand="0" />
+			</Call>	
+			<Call bytesReceived="0" bytesSent="0" caller="LBServer" callee="WebServer" invocations="1" type="s">
+                <Demand CPUDemand="1.29946" DiskDemand="0" />
+            </Call>
+			<Call bytesReceived="0" bytesSent="0" caller="WebServer" callee="Database" invocations="1" type="s">
+				<Demand CPUDemand="0.00139" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" caller="Database" callee="CloudDelay1" invocations="1" type="s">
+				<Demand CPUDemand="6.95092" DiskDemand="0" />
+			</Call>							
+            </Scenario>
+             
+	</Scenarios>
+
+	<Topology>
+		<Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="ClientHost0" type="client"/>
+		<Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="ClientHost1" type="client"/>    
+		<!-- <Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="ProxyHost" type="server"/> --> 
+<!--         <Node CPUParallelism="8000" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="DelayHost0" type="delay"/>  -->
+        <Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="LBHost" type="server"/>
+        <Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="WebHost" type="server"/>	
+        <Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="DataHost" type="server"/>
+<!--          <Node CPUParallelism="8000" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="DelayHost1" type="delay"/>  -->
+		<Node CPUParallelism="1000" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="CloudHost0" type="delay"/>
+		<Node CPUParallelism="1000" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="CloudHost1" type="delay"/>
+		
+
+        <Cluster name="ClientCluster0">
+			<Container canMigrate="false" name="ClientContainer0" parallelism="1000" runsOnNode="ClientHost0" server="false"/>
+		</Cluster>
+		<Cluster name="ClientCluster1">
+			<Container canMigrate="false" name="ClientContainer1" parallelism="1000" runsOnNode="ClientHost1" server="false"/>
+		</Cluster>
+		 <!-- <Cluster name="ProxyCluster">
+			<Container canMigrate="false" name="ProxyContainer" parallelism="1000" runsOnNode="ProxyHost" server="true"/>
+		</Cluster> --> 
+		<!-- <Cluster name="DelayCluster">
+			<Container canMigrate="false" name="DelayContainer0" parallelism="1000" runsOnNode="DelayHost0" server="true"/>
+			<Container canMigrate="false" name="DelayContainer1" parallelism="1000" runsOnNode="DelayHost1" server="true"/>
+        </Cluster>-->
+        <Cluster name="LBCluster">
+            <Container canMigrate="false" name="LBContainer" parallelism="1000" runsOnNode="LBHost" server="true"/>
+        </Cluster>
+		<Cluster name="WebCluster">
+			<Container canMigrate="false" name="WebContainer" parallelism="1000" runsOnNode="WebHost" server="true"/>
+		</Cluster>
+		<Cluster name="DataCluster">
+			<Container canMigrate="false" name="DataContainer" parallelism="1000" runsOnNode="DataHost" server="true"/>
+		</Cluster> 
+		<Cluster name="CloudCluster">
+			<Container canMigrate="false" name="CloudContainer0" parallelism="1000" runsOnNode="CloudHost0" server="true"/>
+			<Container canMigrate="false" name="CloudContainer1" parallelism="1000" runsOnNode="CloudHost1" server="true"/>
+		</Cluster>
+
+        <Middlware fixedOverheadReceive="0" fixedOverheadSend="0" name="http" overheadPerByteReceived="0" overheadPerByteSent="0"/>		
+     
+<!--        <Network connectsNodes="ClientHost0 LBHost" latency="0" name="client0LAN" overheadPerByte="0"/>  -->
+       <!-- <Network connectsNodes="ClientHost1 LBHost" latency="0" name="client1LAN" overheadPerByte="0"/> -->
+            <Network connectsNodes="ClientHost0 ClientHost1 LBHost WebHost DataHost CloudHost0 CloudHost1" latency="0" name="Internet" overheadPerByte="0"/>
+       
+		
+	</Topology>
+
+	<Workloads kind="HL">
+		<Users>0</Users>
+		<WorkloadMixes openModel="false">
+			<Mix load="1" scenario="select 0"/>
+			<Mix load="1" scenario="select 1"/>
+		</WorkloadMixes>
+		<ThinkTimes>
+			<ThinkTime scenario="select 0" time="500"/>
+			<ThinkTime scenario="select 1" time="500"/>
+			
+		</ThinkTimes>
+	</Workloads>
+
+	<Requirements>
+		<ResponseTime maxResponseTime="100" minResponseTime="50" scenario="select 0"/>
+		<ResponseTime maxResponseTime="100" minResponseTime="100" scenario="select 1"/>
+		
+	</Requirements>
+
+</Model>

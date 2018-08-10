@@ -1,0 +1,160 @@
+server:
+    port: 80
+---
+grails:
+    profile: web
+    codegen:
+        defaultPackage: web
+    spring:
+        transactionManagement:
+            proxies: false
+info:
+    app:
+        name: '@info.app.name@'
+        version: '@info.app.version@'
+        grailsVersion: '@info.app.grailsVersion@'
+spring:
+    main:
+        banner-mode: "off"
+    groovy:
+        template:
+            check-template-location: false
+
+# Spring Actuator Endpoints are Disabled by Default
+endpoints:
+    enabled: false
+    jmx:
+        enabled: true
+
+#akka.extensions:
+#  - de.heikoseeberger.constructr.ConstructrExtension
+
+constructr:
+  coordination:
+    host: 'localhost'
+    port: 2379
+
+  coordination-timeout: 3 seconds # Maximum response time for coordination service (e.g. etcd)
+  join-timeout: 15 seconds # Might depend on cluster size and network properties
+  max-nr-of-seed-nodes: 0 # Any nonpositive value means Int.MaxValue
+  nr-of-retries: 2 # Nr. of tries are nr. of retries + 1
+  refresh-interval: 30 seconds # TTL is refresh-interval * ttl-factor
+  retry-delay: 3 seconds # Give coordination service (e.g. etcd) some delay before retrying
+  ttl-factor: 2.0  # Must be greater or equal 1 + ((coordination-timeout * (1 + nr-of-retries) + retry-delay * nr-of-retries)/ refresh-interval)!
+  ignore-refresh-failures: false # Ignore failures once machine is already in "Refreshing" state. It prevents from FSM being terminated due to exhausted number of retries.
+
+---
+grails:
+    mime:
+        disable:
+            accept:
+                header:
+                    userAgents:
+                        - Gecko
+                        - WebKit
+                        - Presto
+                        - Trident
+        types:
+            all: '*/*'
+            atom: application/atom+xml
+            css: text/css
+            csv: text/csv
+            form: application/x-www-form-urlencoded
+            html:
+              - text/html
+              - application/xhtml+xml
+            js: text/javascript
+            json:
+              - application/json
+              - text/json
+            multipartForm: multipart/form-data
+            pdf: application/pdf
+            rss: application/rss+xml
+            text: text/plain
+            hal:
+              - application/hal+json
+              - application/hal+xml
+            xml:
+              - text/xml
+              - application/xml
+    urlmapping:
+        cache:
+            maxsize: 1000
+    controllers:
+        defaultScope: singleton
+    converters:
+        encoding: UTF-8
+    views:
+        default:
+            codec: html
+        gsp:
+            encoding: UTF-8
+            htmlcodec: xml
+            codecs:
+                expression: html
+                scriptlets: html
+                taglib: none
+                staticparts: none
+endpoints:
+    jmx:
+        unique-names: true
+
+spring.jmx.enabled: false
+---
+---
+hibernate:
+    cache:
+        queries: false
+        use_second_level_cache: true
+        use_query_cache: false
+        region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+
+dataSource:
+    pooled: true
+    jmxExport: true
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+environments:
+    development:
+        dataSource:
+            dbCreate: update
+            url: jdbc:mysql://localhost/proxy_server?useUnicode=true&characterEncoding=UTF-8
+            username: root
+            password: ""
+            pooled: true
+            logSql: false
+            driverClassName: com.mysql.jdbc.Driver
+            dialect: org.hibernate.dialect.MySQL5Dialect
+            properties:
+                maxActive: -1
+                minEvictableIdleTimeMillis: 1800000
+                timeBetweenEvictionRunsMillis: 1800000
+                numTestsPerEvictionRun: 3
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: true
+                validationQuery: SELECT 1
+
+    test:
+        dataSource:
+            dbCreate: update
+            url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
+    production:
+        dataSource:
+            dbCreate: update
+            dialect: "org.hibernate.dialect.MySQL5Dialect"
+            jndiName: "java:comp/env/jdbc/ProxyServerPool"
+            configClass: "web.DomainConfiguration"
+            logSql: false
+            driverClassName: "com.mysql.jdbc.Driver"
+            properties:
+                maxActive: -1
+                minEvictableIdleTimeMillis: 1800000
+                timeBetweenEvictionRunsMillis: 1800000
+                numTestsPerEvictionRun: 3
+                testOnBorrow: true
+                testWhileIdle: true
+                testOnReturn: true
+                validationQuery: SELECT 1

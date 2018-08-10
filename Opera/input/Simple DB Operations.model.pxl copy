@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE Model SYSTEM "Opera.dtd">
+<Model>
+	<Scenarios>
+		<Services>
+			<Service canMigrate="false" name="Browser" runsInContainer="Client"/>
+			<Service canMigrate="false" name="ProxyServer" runsInContainer="ProxyContainer"/>
+			<Service canMigrate="false" name="WebServer" runsInContainer="WebContainer"/>
+			<Service canMigrate="false" name="Database" runsInContainer="DataContainer"/>
+		</Services>
+
+		<Scenario name="insert" triggeredByService="Browser">
+			<Call bytesReceived="0" bytesSent="0" callee="ProxyServer" caller="Browser" invocations="1" type="s">
+				<Demand CPUDemand="21" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="WebServer" caller="ProxyServer" invocations="1" type="s">
+				<Demand CPUDemand="5.3884" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="Database" caller="WebServer" invocations="1" type="s">
+				<Demand CPUDemand="5.6041" DiskDemand="0" />
+			</Call>
+		</Scenario>
+		<Scenario name="update" triggeredByService="Browser">
+			<Call bytesReceived="0" bytesSent="0" callee="ProxyServer" caller="Browser" invocations="1" type="s">
+				<Demand CPUDemand="21" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="WebServer" caller="ProxyServer" invocations="1" type="s">
+				<Demand CPUDemand="5.3884" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="Database" caller="WebServer" invocations="1" type="s">
+				<Demand CPUDemand="5.6041" DiskDemand="0" />
+			</Call>
+		</Scenario>
+		<Scenario name="select 0" triggeredByService="Browser">
+			<Call bytesReceived="0" bytesSent="0" callee="ProxyServer" caller="Browser" invocations="1" type="s">
+				<Demand CPUDemand="21" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="WebServer" caller="ProxyServer" invocations="1" type="s">
+				<Demand CPUDemand="5.3884" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="Database" caller="WebServer" invocations="1" type="s">
+				<Demand CPUDemand="5.6041" DiskDemand="0" />
+			</Call>
+		</Scenario>
+
+		<Scenario name="select 1" triggeredByService="Browser">
+			<Call bytesReceived="0" bytesSent="0" callee="ProxyServer" caller="Browser" invocations="1" type="s">
+				<Demand CPUDemand="21" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="WebServer" caller="ProxyServer" invocations="1" type="s">
+				<Demand CPUDemand="5.3884" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="Database" caller="WebServer" invocations="1" type="s">
+				<Demand CPUDemand="5.6041" DiskDemand="0" />
+			</Call>
+		</Scenario>
+
+		<Scenario name="select 2" triggeredByService="Browser">
+			<Call bytesReceived="0" bytesSent="0" callee="ProxyServer" caller="Browser" invocations="1" type="s">
+				<Demand CPUDemand="21" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="WebServer" caller="ProxyServer" invocations="1" type="s">
+				<Demand CPUDemand="5.3884" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="Database" caller="WebServer" invocations="1" type="s">
+				<Demand CPUDemand="5.6041" DiskDemand="0" />
+			</Call>
+		</Scenario>
+
+		<Scenario name="select 3" triggeredByService="Browser">
+			<Call bytesReceived="0" bytesSent="0" callee="ProxyServer" caller="Browser" invocations="1" type="s">
+				<Demand CPUDemand="21" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="WebServer" caller="ProxyServer" invocations="1" type="s">
+				<Demand CPUDemand="5.3884" DiskDemand="0" />
+			</Call>
+			<Call bytesReceived="0" bytesSent="0" callee="Database" caller="WebServer" invocations="1" type="s">
+				<Demand CPUDemand="5.6041" DiskDemand="0" />
+			</Call>
+		</Scenario>
+	</Scenarios>
+
+	<Topology> 
+		<Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="ClientHost" type="client"/>
+		<Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="ProxyHost" type="delay"/>
+		<Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="WebHost" type="server"/>
+		<Node CPUParallelism="1" CPURatio="1" DiskParallelism="1" DiskRatio="1" name="DataHost" type="server"/>
+
+		<Cluster name="ClientCluster">
+			<Container canMigrate="false" name="Client" parallelism="1000" runsOnNode="ClientHost" server="false"/>
+		</Cluster>
+		<Cluster name="ProxyCluster">
+			<Container canMigrate="false" name="ProxyContainer" parallelism="10000" runsOnNode="ProxyHost" server="true"/>
+		</Cluster>
+		<Cluster name="WebCluster">
+			<Container canMigrate="false" name="WebContainer" parallelism="400" runsOnNode="WebHost" server="true"/>
+		</Cluster>
+		<Cluster name="DataCluster">
+			<Container canMigrate="false" name="DataContainer" parallelism="10000" runsOnNode="DataHost" server="true"/>
+		</Cluster>
+
+		<Middlware fixedOverheadReceive="0" fixedOverheadSend="0" name="http" overheadPerByteReceived="0" overheadPerByteSent="0"/>
+		<Network connectsNodes="ClientHost ProxyHost" latency="0" name="Internet" overheadPerByte="0"/>
+		<Network connectsNodes="ProxyHost WebHost DataHost" latency="2" name="Intranet" overheadPerByte="0"/>
+	</Topology>
+
+	<Workloads kind="HL">
+		<Users>0</Users>
+		<WorkloadMixes openModel="false">
+			<Mix load="41.62406546" scenario="insert"/>
+			<Mix load="41.61565309" scenario="update"/>
+			<Mix load="4.167608215" scenario="select 0"/>
+			<Mix load="2.50608198" scenario="select 1"/>
+			<Mix load="2.455554649" scenario="select 2"/>
+			<Mix load="0.870244106" scenario="select 3"/>
+		</WorkloadMixes>
+		<ThinkTimes>
+			<ThinkTime scenario="insert" time="3000"/>
+			<ThinkTime scenario="update" time="3000"/>
+			<ThinkTime scenario="select 0" time="3000"/>
+			<ThinkTime scenario="select 1" time="3000"/>
+			<ThinkTime scenario="select 2" time="3000"/>
+			<ThinkTime scenario="select 3" time="3000"/>
+		</ThinkTimes>
+	</Workloads>
+
+	<Requirements>
+		<ResponseTime maxResponseTime="100000" minResponseTime="100" scenario="insert"/>
+		<ResponseTime maxResponseTime="100000" minResponseTime="100" scenario="update"/>
+		<ResponseTime maxResponseTime="100000" minResponseTime="100" scenario="select 0"/>
+		<ResponseTime maxResponseTime="100000" minResponseTime="100" scenario="select 1"/>
+		<ResponseTime maxResponseTime="100000" minResponseTime="100" scenario="select 2"/>
+		<ResponseTime maxResponseTime="100000" minResponseTime="100" scenario="select 3"/>
+	</Requirements>
+
+</Model>

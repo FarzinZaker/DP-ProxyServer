@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Results>
+  <Architecture name="0">
+    <Service MaxUtilization="0.0" allocatedToContainer="ClientContainer0" name="Browser0"/>
+    <Service MaxUtilization="0.0" allocatedToContainer="ClientContainer1" name="Browser1"/>
+    <Service MaxUtilization="0.0" allocatedToContainer="DelayContainer0" name="DelayCenter0"/>
+    <Service MaxUtilization="0.0" allocatedToContainer="DelayContainer1" name="DelayCenter1"/>
+    <Service MaxUtilization="0.0" allocatedToContainer="LBContainer" name="LBServer"/>
+    <Service MaxUtilization="0.0" allocatedToContainer="WebContainer" name="WebServer"/>
+    <Service MaxUtilization="0.0" allocatedToContainer="DataContainer" name="Database"/>
+    <Service MaxUtilization="0.0" allocatedToContainer="CloudContainer0" name="CloudDelay0"/>
+    <Service MaxUtilization="0.0" allocatedToContainer="CloudContainer1" name="CloudDelay1"/>
+    <ExtremeMetrics scenario="select 0">
+      <MaxResponseTime value="0.0"/>
+      <MinSatisfaction value="0.0"/>
+    </ExtremeMetrics>
+    <ExtremeMetrics scenario="select 1">
+      <MaxResponseTime value="0.0"/>
+      <MinSatisfaction value="0.0"/>
+    </ExtremeMetrics>
+    <Workloads users="19.9">
+      <Scenario name="select 0" users="10.0">
+        <ResponseTime>15.035518518921444</ResponseTime>
+        <Throughput>0.013433630150734392</Throughput>
+      </Scenario>
+      <Scenario name="select 1" users="9.9">
+        <ResponseTime>161.01655857481285</ResponseTime>
+        <Throughput>0.01497693192640277</Throughput>
+      </Scenario>
+      <Container Utilization="0.0" multiplicity="1000" name="ClientContainer0">
+        <Scenario responseTime="0.0" scenarioName="select 0"/>
+        <Scenario responseTime="0.0" scenarioName="select 1"/>
+      </Container>
+      <Container Utilization="0.0" multiplicity="1000" name="ClientContainer1">
+        <Scenario responseTime="0.0" scenarioName="select 0"/>
+        <Scenario responseTime="0.0" scenarioName="select 1"/>
+      </Container>
+      <Container Utilization="2.019815581841378E-4" multiplicity="1000" name="DelayContainer0">
+        <Scenario responseTime="15.035518518921444" scenarioName="select 0"/>
+        <Scenario responseTime="0.0" scenarioName="select 1"/>
+      </Container>
+      <Container Utilization="3.0270022087424093E-12" multiplicity="1000" name="DelayContainer1">
+        <Scenario responseTime="0.0" scenarioName="select 0"/>
+        <Scenario responseTime="2.0211096796174444E-7" scenarioName="select 1"/>
+      </Container>
+      <Container Utilization="4.36010330332449E-5" multiplicity="1000" name="LBContainer">
+        <Scenario responseTime="1.5348563242223008" scenarioName="select 0"/>
+        <Scenario responseTime="1.5345160649272107" scenarioName="select 1"/>
+      </Container>
+      <Container Utilization="0.0027601565565622357" multiplicity="1000" name="WebContainer">
+        <Scenario responseTime="27.674268566890436" scenarioName="select 0"/>
+        <Scenario responseTime="159.4717613777853" scenarioName="select 1"/>
+      </Container>
+      <Container Utilization="3.85544437025689E-5" multiplicity="1000" name="DataContainer">
+        <Scenario responseTime="2.8640963599800062" scenarioName="select 0"/>
+        <Scenario responseTime="0.005290390941149196" scenarioName="select 1"/>
+      </Container>
+      <Container Utilization="0.0026503372007210847" multiplicity="1000" name="CloudContainer0">
+        <Scenario responseTime="197.29168571388365" scenarioName="select 0"/>
+        <Scenario responseTime="0.0" scenarioName="select 1"/>
+      </Container>
+      <Container Utilization="7.474296359595984E-8" multiplicity="1000" name="CloudContainer1">
+        <Scenario responseTime="0.0" scenarioName="select 0"/>
+        <Scenario responseTime="0.0049905390482023896" scenarioName="select 1"/>
+      </Container>
+      <Service Utilization="0.20198159490770842" name="Browser0">
+        <Scenario name="select 0" responseTime="15.035518518921444"/>
+        <Scenario name="select 1" responseTime="0.0"/>
+      </Service>
+      <Service Utilization="2.411534036798616" name="Browser1">
+        <Scenario name="select 0" responseTime="0.0"/>
+        <Scenario name="select 1" responseTime="161.01655857481285"/>
+      </Service>
+      <Service Utilization="0.20198159490770842" name="DelayCenter0">
+        <Scenario name="select 0" responseTime="15.035518518921444"/>
+        <Scenario name="select 1" responseTime="0.0"/>
+      </Service>
+      <Service Utilization="2.411534036798616" name="DelayCenter1">
+        <Scenario name="select 0" responseTime="0.0"/>
+        <Scenario name="select 1" responseTime="161.01655857481285"/>
+      </Service>
+      <Service Utilization="5.492737363496709" name="LBServer">
+        <Scenario name="select 0" responseTime="229.3649069649764"/>
+        <Scenario name="select 1" responseTime="161.01655837270187"/>
+      </Service>
+      <Service Utilization="5.449136328658206" name="WebServer">
+        <Scenario name="select 0" responseTime="227.8300506407541"/>
+        <Scenario name="select 1" responseTime="159.48204230777466"/>
+      </Service>
+      <Service Utilization="2.688972725699868" name="Database">
+        <Scenario name="select 0" responseTime="200.15578207386366"/>
+        <Scenario name="select 1" responseTime="0.010280929989351584"/>
+      </Service>
+      <Service Utilization="2.650343537695241" name="CloudDelay0">
+        <Scenario name="select 0" responseTime="197.29168571388365"/>
+        <Scenario name="select 1" responseTime="0.0"/>
+      </Service>
+      <Service Utilization="7.474296360098206E-5" name="CloudDelay1">
+        <Scenario name="select 0" responseTime="0.0"/>
+        <Scenario name="select 1" responseTime="0.0049905390482023896"/>
+      </Service>
+      <Node name="ClientHost0">
+        <CPU>
+          <Utilization>0.0</Utilization>
+        </CPU>
+        <DISK>
+          <Utilization>0.0</Utilization>
+        </DISK>
+      </Node>
+      <Node name="ClientHost1">
+        <CPU>
+          <Utilization>0.0</Utilization>
+        </CPU>
+        <DISK>
+          <Utilization>0.0</Utilization>
+        </DISK>
+      </Node>
+      <Node name="DelayHost0">
+        <CPU>
+          <Utilization>2.521174983615397E-5</Utilization>
+        </CPU>
+        <DISK>
+          <Utilization>0.0</Utilization>
+        </DISK>
+      </Node>
+      <Node name="LBHost">
+        <CPU>
+          <Utilization>0.04173059063372593</Utilization>
+        </CPU>
+        <DISK>
+          <Utilization>0.0</Utilization>
+        </DISK>
+      </Node>
+      <Node name="WebHost">
+        <CPU>
+          <Utilization>0.7849464973872726</Utilization>
+        </CPU>
+        <DISK>
+          <Utilization>0.0</Utilization>
+        </DISK>
+      </Node>
+      <Node name="DataHost">
+        <CPU>
+          <Utilization>0.037269248984293325</Utilization>
+        </CPU>
+        <DISK>
+          <Utilization>0.0</Utilization>
+        </DISK>
+      </Node>
+      <Node name="DelayHost1">
+        <CPU>
+          <Utilization>3.750039606976357E-13</Utilization>
+        </CPU>
+        <DISK>
+          <Utilization>0.0</Utilization>
+        </DISK>
+      </Node>
+      <Node name="CloudHost0">
+        <CPU>
+          <Utilization>0.0026465639372923746</Utilization>
+        </CPU>
+        <DISK>
+          <Utilization>0.0</Utilization>
+        </DISK>
+      </Node>
+      <Node name="CloudHost1">
+        <CPU>
+          <Utilization>7.407700543280136E-8</Utilization>
+        </CPU>
+        <DISK>
+          <Utilization>0.0</Utilization>
+        </DISK>
+      </Node>
+    </Workloads>
+  </Architecture>
+</Results>
