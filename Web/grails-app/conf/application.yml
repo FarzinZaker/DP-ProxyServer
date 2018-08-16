@@ -122,7 +122,7 @@ environments:
             dbCreate: update
             url: jdbc:mysql://localhost/proxy_server?useUnicode=true&characterEncoding=UTF-8
             username: root
-            password: ""
+            password: "DP-Database!@#"
             pooled: true
             logSql: false
             driverClassName: com.mysql.jdbc.Driver

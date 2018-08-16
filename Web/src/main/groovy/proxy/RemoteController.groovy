@@ -42,7 +42,7 @@ class RemoteController {
     }
 
     static int[] getBW(String scenario) {
-        def ip = SystemConfig.scenarios[scenario].publicIP ?: SystemConfig.scenarios[scenario].privateIP
+        def ip = SystemConfig.feederAddress
         def inFace = SystemConfig.scenarios[scenario].interfaceName ?: 'p0'
         getBW(ip, inFace)
     }
@@ -51,12 +51,10 @@ class RemoteController {
     private static String privateKey = Environment.isDevelopmentMode() ? '/Personal/DevDesk/DPPackage/DPKeyPair.pem' : '/home/DPKeyPair.pem'
 
     static String executeCommand(String ip, String command) {
-//        println "SSH: ${ip} - ${command}"
         try {
             def client = new JSch()
             client.addIdentity(privateKey)
             def session = client.getSession(user, ip)
-//            session.setPassword(password)
             def config = new Properties()
             config.put("StrictHostKeyChecking", "no")
             session.setConfig(config)
@@ -67,26 +65,16 @@ class RemoteController {
             channelExec.connect()
             BufferedReader reader = new BufferedReader(new InputStreamReader(input))
             String line
-            int index = 0
 
             def result = ''
             while ((line = reader.readLine()) != null) {
                 result += line
-//                System.out.println(++index + " : " + line)
             }
-//            println result
 
             int exitStatus = channelExec.getExitStatus()
             channelExec.disconnect()
             session.disconnect()
-            if (exitStatus < 0) {
-//                System.out.println("Done, but exit status not set!")
-            } else if (exitStatus > 0) {
-//                System.out.println("Done, but with error!")
-            } else {
-//                System.out.println("Done!")
 
-            }
             return result
         }
         catch (ignored) {

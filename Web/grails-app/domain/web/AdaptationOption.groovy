@@ -5,6 +5,10 @@ class AdaptationOption {
     Float value
     Configuration configuration
 
+    static mapping = {
+        sort 'value'
+    }
+
     static constraints = {
         value()
     }

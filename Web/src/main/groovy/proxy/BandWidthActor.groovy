@@ -64,21 +64,14 @@ class BandWidthActor extends UntypedAbstractActor {
         }
 
         if (!Environment.isDevelopmentMode()) {
-
-            //apply bandwidth on network
-//            def weightSum = bandWidths.values().sum { it } as Float
-//            println "SUM BANDWIDTH WEIGHT: ${weightSum}"
-//            println "BANDWIDTH WEIGHT: ${bandWidths as JSON}"
-//            def availableBandwidth = SystemConfig.totalBandwidth - (SystemConfig.scenarios.values().collect { it.minBandwidth }.sum() as Integer)
             bandWidths.each { bandWidth ->
                 def newBandwidth = Math.round((bandWidth.value as Float) * SystemConfig.totalBandwidth)?.toInteger()
-                def minBandwidth = (SystemConfig.scenarios[bandWidth.key].minBandwidth as Integer) * ScenarioActor.lastArrivalRates[bandWidth.key] * 2
+                def minBandwidth = 100 * ScenarioActor.lastArrivalRates[bandWidth.key] * 2
                 if (newBandwidth < minBandwidth)
                     newBandwidth = minBandwidth
                 realBandWidth.put(bandWidth.key, newBandwidth)
             }
 
-//            println "REAL WEIGHT: ${realBandWidth as JSON}"
             realBandWidth.each { bandWidth ->
                 RemoteController.setBW(bandWidth.key, bandWidth.value)
             }

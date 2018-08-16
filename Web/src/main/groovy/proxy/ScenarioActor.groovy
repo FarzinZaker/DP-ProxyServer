@@ -167,24 +167,8 @@ class ScenarioActor extends UntypedAbstractActor {
             lastArrivalRates.put(scenarioName, arrivalRate)
         }
 
-        //test arrival rate model
-        if (SystemConfig.testArrivalRateModel && arrivalRate > 0) {
-            def predictedArrivalRate = arrivalRateModel.predictNext(
-                    arrivalRates?.collect { [key: it.key, value: it.value] }?.sort { it.key }?.collect { it.value } + [lastArrivalRate ?: 0],
-                    responseTimes?.collect { [key: it.key, value: it.value] }?.sort { it.key }?.collect { it.value } + [lastResponseTime ?: 0],
-                    serversCount?.get())
-            Integer variance = Math.round(Math.abs((predictedArrivalRate - arrivalRate) * 10000 / arrivalRate / 100))
-            Integer roundedVariance = Math.round(Math.round(variance / 10))
-            if (!arrivalRateVariances.containsKey(roundedVariance))
-                arrivalRateVariances.put(roundedVariance, 0)
-            arrivalRateVariances.put(roundedVariance, arrivalRateVariances.get(roundedVariance) + 1)
-            def sum = arrivalRateVariances.collect { it.value }.sum()
-            println(arrivalRateVariances.collect { [value: it.key, percent: Math.round(it.value * 100 / sum)] }.collect { "${it.percent}" }.join('\t'))
-        }
-
         //forward message
         def response = new ScenarioService(userRequest: request).handle()
-//        println response
         sender.tell(response, null)
 
         //train models
@@ -203,22 +187,6 @@ class ScenarioActor extends UntypedAbstractActor {
     private void startAdaptation() {
 
         adaptationStartTime = new Date()
-        if (SystemConfig.printStatistics) {
-            println ''
-            println '------------------------------------------------------'
-            println "Started: ${scenarioName}"
-            println '------------------------------------------------------'
-            println "VIOLATIONS: ${numberOfSLAViolations.get()}"
-            println "ADAPTATIONS: ${numberOfAdaptations.incrementAndGet()}"
-            println "FINISHED: ${numberOfFinishedAdaptations.get()}"
-            println '------------------------------------------------------'
-            println ''
-        }
-
-        if (!SystemConfig.adaptationEnabled) {
-            adapting.set(false)
-            return
-        }
 
         //setup adaptation options
         def optionsMap = new ConcurrentHashMap<Float, ConcurrentHashMap<String, Float>>()
@@ -265,23 +233,6 @@ class ScenarioActor extends UntypedAbstractActor {
 
             Address address = new Address("akka.tcp", "ForwardServer", server, 2552)
 
-//            def params = [bytes: Serializer.saveObject([adaptationRequest.id,
-//                                                        scenarioName,
-//                                                        option.value[scenarioName],
-//                                                        option.key as Float,
-//                                                        adaptationRequest.leaders?.get(option.key),
-//                                                        adaptationRequest.scenariosCount,
-//                                                        isLeader,
-//                                                        SystemConfig.scenarios,
-//                                                        arrivalRateModel,
-//                                                        responseTimeModel,
-//                                                        arrivalRates,
-//                                                        responseTimes,
-//                                                        serversCount,
-//                                                        bandWidths,
-//                                                        lastRequests,
-//                                                        self].toArray())]
-
             try {
                 def testActor = context.actorOf(Props.create(
                         TestActor,
@@ -302,26 +253,6 @@ class ScenarioActor extends UntypedAbstractActor {
                         lastRequests,
                         self
                 ).withDeploy(new Deploy(new RemoteScope(address))), UUID.randomUUID().toString())
-
-//            def testActor = context.actorOf(Props.create(
-//                    TestActor,
-//                    adaptationRequest.id,
-//                    scenarioName,
-//                    option.value[scenarioName],
-//                    option.key as Float,
-//                    adaptationRequest.leaders?.get(option.key),
-//                    adaptationRequest.scenariosCount,
-//                    isLeader,
-//                    SystemConfig.scenarios,
-//                    arrivalRateModel,
-//                    responseTimeModel,
-//                    arrivalRates,
-//                    responseTimes,
-//                    serversCount,
-//                    bandWidths,
-//                    lastRequests,
-//                    self
-//            ).withDeploy(new Deploy(new RemoteScope(address))), UUID.randomUUID().toString())
 
                 testActors.get(adaptationRequest.id).put(option.key as Float, testActor)
 
@@ -365,18 +296,6 @@ class ScenarioActor extends UntypedAbstractActor {
                 count++
             }
             averageAdaptationTime.set(sum / (count + 1))
-
-            if (SystemConfig.printStatistics) {
-                println ''
-                println '------------------------------------------------------'
-                println "Finished: ${scenarioName} (DURATION: ${duration})"
-                println '------------------------------------------------------'
-                println "VIOLATIONS: ${numberOfSLAViolations.get()}"
-                println "ADAPTATIONS: ${numberOfAdaptations.get()}"
-                println "FINISHED: ${numberOfFinishedAdaptations.incrementAndGet()}"
-                println '------------------------------------------------------'
-                println ''
-            }
         }
     }
 
@@ -430,33 +349,11 @@ class ScenarioActor extends UntypedAbstractActor {
         }
         newBandWidths.putIfAbsent(scenarioName, nextBandWidth)
         bandWidthActor.tell(new BandWidthData(bandWidths: newBandWidths), self)
-
-        if (SystemConfig.printStatistics)
-            println "SELECTED ADAPTATION OPTION: ${selectedAdaptationOption}"
     }
-
-//    def lastAverageResponseTime
 
     private void handleOwnResponseTime(Integer responseTime) {
 
-//        if (lastResponseTime && responseTime > lastAverageResponseTime * 2)
-//            return
         numberOfDeliveredRequests.incrementAndGet()
-
-        //test response time model
-        if (SystemConfig.testResponseTimeModel && responseTime > 0) {
-            def predictedResponseTime = responseTimeModel.predictNext(
-                    arrivalRates?.collect { [key: it.key, value: it.value] }?.sort { it.key }?.collect { it.value } + [lastArrivalRate ?: 0],
-                    responseTimes?.collect { [key: it.key, value: it.value] }?.sort { it.key }?.collect { it.value } + [lastResponseTime ?: 0],
-                    serversCount?.get())
-            Integer variance = Math.round(Math.abs((predictedResponseTime - responseTime) * 10000 / responseTime / 100))
-            Integer roundedVariance = Math.round(Math.round(variance / 10))
-            if (!responseTimeVariances.containsKey(roundedVariance))
-                responseTimeVariances.put(roundedVariance, 0)
-            responseTimeVariances.put(roundedVariance, responseTimeVariances.get(roundedVariance) + 1)
-            def sum = responseTimeVariances.collect { it.value }.sum()
-            println(responseTimeVariances.collect { [value: it.key, percent: Math.round(it.value * 100 / sum)] }.collect { "${it.percent}" }.join('\t'))
-        }
 
         //train model
         responseTimeModel.train(
@@ -491,7 +388,6 @@ class ScenarioActor extends UntypedAbstractActor {
             adaptationsCount.put(scenarioName, adaptationsCount.get(scenarioName) + 1)
             startAdaptation()
         }
-//        lastAverageResponseTime = responseTime
     }
 
     private synchronized ActorRef getBandWidthActor() {

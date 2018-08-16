@@ -2,15 +2,15 @@ package proxy
 
 import akka.actor.ActorRef
 import akka.actor.UntypedAbstractActor
-import grails.converters.JSON
 import org.h2.mvstore.ConcurrentArrayList
 import org.springframework.context.annotation.Scope
 import proxy.messages.*
 
+import javax.inject.Named
+
 /**
  * Created by root on 8/14/17.
  */
-import javax.inject.Named
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
@@ -28,28 +28,6 @@ class TestActor extends UntypedAbstractActor {
     private ActorRef leader
     private Integer scenariosCount
     private ActorRef parent
-
-//    TestActor(Map parametersMap) {
-//        akka.serialization.Serialization.currentSystem.withValue(context.system) {
-//            def parameters = Serializer.loadObject(parametersMap.bytes) as Object[]
-//            this.adaptationId = parameters[0]
-//            this.scenarioName = parameters[1]
-//            this.currentBandWidth = parameters[2]
-//            this.option = parameters[3]
-//            this.leader = parameters[4] ?: self
-//            this.scenariosCount = parameters[5]
-//            this.isLeader = parameters[6]
-//            this.scenarios = parameters[7]
-//            this.arrivalRateModel = parameters[8]
-//            this.responseTimeModel = parameters[9]
-//            this.arrivalRates = parameters[10]
-//            this.responseTimes = parameters[11]
-//            this.serversCount = parameters[12]
-//            this.bandWidths = parameters[13]
-//            this.lastRequests = parameters[14]
-//            this.parent = parameters[15]
-//        }
-//    }
 
     TestActor(
             String adaptationId,
@@ -246,7 +224,7 @@ class TestActor extends UntypedAbstractActor {
     }
 
     private void feed() {
-        if (new Date().time - startTime.time < SystemConfig.testDuration / SystemConfig.simulationSpeed) {
+        if (new Date().time - startTime.time < SystemConfig.simulationSteps) {
             def predictedArrivalRate = arrivalRateModel.predictNext(
                     arrivalRates?.collect { [key: it.key, value: it.value] }?.sort { it.key }?.collect { it.value } + [lastArrivalRate ?: 0],
                     responseTimes?.collect { [key: it.key, value: it.value] }?.sort { it.key }?.collect { it.value } + [lastResponseTime ?: 0],

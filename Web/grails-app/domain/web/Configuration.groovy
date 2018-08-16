@@ -5,55 +5,31 @@ import proxy.SystemConfig
 class Configuration {
 
     String name = 'Default'
-    String serverAddress
-    String webHostIP
-    String dataHostIP
-    Integer totalBandwidth = 384000
-    Boolean adaptationEnabled = true
-    Float adaptationSLARate = 0.9f
-    Integer coolingTime = 10
-    Integer arrivalRateWindowSize = 10
-    Integer responseTimeWindowSize = 10
-    Integer scoringViolationsWeight = 5
-    Integer scoringAdaptationsWeight = 1
-    Boolean testArrivalRateModel = false
-    Boolean testResponseTimeModel = false
-    Boolean printStatistics = true
-    Integer numberOfServedRequestsBetweenAdaptations = 100
-    Integer numberOfServedRequestsBetweenViolationChecks = 100
-    Integer simulationSpeed = 10
-    Integer testDuration = 1000
-    Integer feedingSpeed = 1
-    Integer feedingStepsCount = 100
-    String feedingConfig = '250,220,350,650,750'
+    String feederAddress = '10.1.0.21'
+    String proxyServerMasterAddress = '10.1.0.31'
+    String proxyServerSlaveAddress = '10.1.0.32'
+    String loadBalancerAddress = '10.1.0.41'
+    String webServer1Address = '10.1.0.51'
+    String webServer2Address = '10.1.0.52'
+    String webServer3Address = '10.1.0.53'
+    String databaseAddress = '10.1.0.61'
+    Integer simulationSteps = 100
 
     static hasMany = [responseTimeSLAs: ScenarioConfig, adaptationOptions: AdaptationOption]
 
     static constraints = {
         name(nullable: true)
-        serverAddress(nullable: true)
-        webHostIP(nullable: true)
-        dataHostIP(nullable: true)
-        totalBandwidth(nullable: true)
-        adaptationEnabled()
-        adaptationSLARate()
-        coolingTime(nullable: true)
-        numberOfServedRequestsBetweenAdaptations()
-        numberOfServedRequestsBetweenViolationChecks()
-        arrivalRateWindowSize()
-        responseTimeWindowSize()
-        scoringViolationsWeight()
-        scoringAdaptationsWeight()
-        simulationSpeed()
-        testDuration()
-        testArrivalRateModel()
-        testResponseTimeModel()
-        printStatistics()
+        feederAddress(nullable: true)
+        proxyServerMasterAddress(nullable: true)
+        proxyServerSlaveAddress(nullable: true)
+        loadBalancerAddress(nullable: true)
+        webServer1Address(nullable: true)
+        webServer2Address(nullable: true)
+        webServer3Address(nullable: true)
+        databaseAddress(nullable: true)
+        simulationSteps(inList: [1, 25, 50, 75, 100])
         responseTimeSLAs()
         adaptationOptions()
-        feedingSpeed(nullable: true)
-        feedingStepsCount(nullable: true)
-        feedingConfig(nullable: true)
     }
 
     def afterUpdate() {
@@ -65,31 +41,20 @@ class Configuration {
     }
 
     def updateConfiguration() {
-        SystemConfig.serverAddress = serverAddress
-        SystemConfig.webHostIP = webHostIP
-        SystemConfig.dataHostIP = dataHostIP
-        SystemConfig.adaptationEnabled = adaptationEnabled
-        SystemConfig.totalBandwidth = (totalBandwidth ?: 384000)
-        SystemConfig.adaptationSLARate = adaptationSLARate
-        SystemConfig.coolingTime = (coolingTime ?: 10)
-        SystemConfig.numberOfServedRequestsBetweenAdaptations = numberOfServedRequestsBetweenAdaptations
-        SystemConfig.numberOfServedRequestsBetweenViolationChecks = numberOfServedRequestsBetweenViolationChecks
-        SystemConfig.arrivalRateWindowSize = arrivalRateWindowSize
-        SystemConfig.responseTimeWindowSize = responseTimeWindowSize
-        SystemConfig.scoringViolationsWeight = scoringViolationsWeight
-        SystemConfig.scoringAdaptationsWeight = scoringAdaptationsWeight
-        SystemConfig.simulationSpeed = simulationSpeed
-        SystemConfig.testDuration = testDuration
-        SystemConfig.testArrivalRateModel = testArrivalRateModel
-        SystemConfig.testResponseTimeModel = testResponseTimeModel
-        SystemConfig.printStatistics = printStatistics
-        SystemConfig.feedingSpeed = feedingSpeed
-        SystemConfig.feedingStepsCount = feedingStepsCount
-        SystemConfig.feedingConfig = feedingConfig
+        SystemConfig.feederAddress = feederAddress
+        SystemConfig.proxyServerMasterAddress = proxyServerMasterAddress
+        SystemConfig.proxyServerSlaveAddress = proxyServerSlaveAddress
+        SystemConfig.loadBalancerAddress = load()
+        SystemConfig.webServer1Address = webServer1Address
+        SystemConfig.webServer2Address = webServer2Address
+        SystemConfig.webServer3Address = webServer3Address
+        SystemConfig.databaseAddress = databaseAddress
+
+        SystemConfig.simulationSteps = simulationSteps
 
         SystemConfig.scenarios?.clear()
         responseTimeSLAs?.each {
-            SystemConfig.scenarios.putIfAbsent(it.name, [responseTimeSLA: it.responseTimeSLA, publicIP: it.publicIP, privateIP: it.privateIP, interfaceName: it.interfaceName, minBandwidth: it.minBandwidth ?: 100, feedingWeight: it.feedingWeight ?: 0.25])
+            SystemConfig.scenarios.putIfAbsent(it.name, [responseTimeSLA: it.responseTimeSLA, interfaceName: it.interfaceName])
         }
 
         SystemConfig.adaptationOptions = adaptationOptions?.collect { it.value }

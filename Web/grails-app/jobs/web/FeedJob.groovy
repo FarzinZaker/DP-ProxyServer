@@ -14,16 +14,18 @@ class FeedJob {
     def concurrent = false
 
     static triggers = {
-        simple repeatInterval: 1000l, startDelay: 10000l  // execute job once in 5 seconds
+        simple repeatInterval: 1000l, startDelay: 10000l
     }
 
     def execute() {
+
+        if(Environment.isDevelopmentMode())
+            return
 
         if (new File('/etc/bwc/master')?.text?.trim() != '1')
             return
 
         if (SystemConfig.currentFeedingStep.get() > SystemConfig.feedingStepsCount) {
-//            println "FEEDING: FINISHED"
             if (SystemConfig.currentFeedingStep.get() == SystemConfig.feedingStepsCount + 1) {
                 def directory = new File('/var/log/bwc')
                 if (!directory.exists())
@@ -68,7 +70,6 @@ class FeedJob {
         if (ScenarioActor.adapting?.get())
             return
 
-//        10.times {
         println "FEEDING: ${SystemConfig.currentFeedingStep.get() + 1}/${SystemConfig.feedingStepsCount}"
         def threads = new ArrayList<Thread>()
         SystemConfig.scenarios.eachWithIndex { scenario ->
@@ -82,18 +83,6 @@ class FeedJob {
                 }
             })
         }
-//            SystemConfig.scenarios.sort { it.key }.eachWithIndex { scenario, Integer index ->
-//                threads.add(new Thread() {
-//                    void run() {
-//                        try {
-////                            feedScenario(scenario.value.publicIP as String, scenario.value.interfaceName as String, index, scenario.value.feedingWeight as Float, SystemConfig.currentFeedingStep.get())
-//                            feedScenario(scenario.key as String, SystemConfig.currentFeedingStep.get())
-//                        } catch (exception) {
-//                            println(exception.message)
-//                        }
-//                    }
-//                })
-//            }
         threads.each {
             it.start()
         }
@@ -102,7 +91,6 @@ class FeedJob {
         }
 //        }
 
-//        println "COMPLETED ${SystemConfig.currentFeedingStep.getAndIncrement()}"
         SystemConfig.currentFeedingStep.getAndIncrement()
 
         logReport()
@@ -112,9 +100,8 @@ class FeedJob {
         if (Environment.isDevelopmentMode()) {
             def process = "java -jar /Personal/DevDesk/BWC/Feeder/out/artifacts/Feeder_jar/Feeder.jar ${scenarioName} ${540} ${step} - ${SystemConfig.proxyServerMasterAddress}".execute()
             process.waitFor()
-//            println process.text
         } else
-            RemoteController.executeCommand(SystemConfig.feederAddress, "java -jar ~/feeders/${inet?.replace('p', '')}/Feeder.jar ${scenarioName} ${3600} ${step} ${inet} ${SystemConfig.proxyServerMasterAddress}:8080")
+            RemoteController.executeCommand(SystemConfig.feederAddress, "java -jar ~/feeders/${inet?.replace('p', '')}/Feeder.jar ${scenarioName} ${SystemConfig.feedingSpeed} ${step} ${inet} ${SystemConfig.proxyServerMasterAddress}:8080")
     }
 
 

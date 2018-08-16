@@ -15,10 +15,13 @@ class UtilizationJob {
     def concurrent = false
 
     static triggers = {
-        simple repeatInterval: 3000l, startDelay: 10000  // execute job once in 5 seconds
+        simple repeatInterval: 3000l, startDelay: 10000
     }
 
     def execute() {
+
+        if(Environment.isDevelopmentMode())
+            return
 
         if(new File('/etc/bwc/master')?.text?.trim() != '1')
             return

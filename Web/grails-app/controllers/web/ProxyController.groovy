@@ -55,11 +55,9 @@ class ProxyController {
             if (!actorSystem) {
                 def cl = this.class.classLoader
                 actorSystem = ActorSystem.create("ForwardServer", ConfigFactory.load(cl), cl)
-//            actorSystem = ActorSystem.create("ForwardServer", ConfigFactory.load(cl), cl)
             }
         }
 
-//        def scenarioName = (request?.servletPath?.split('/')?.findAll { it } + params?.findAll { it.key != 'rt' }?.sort { it.key }?.collect { "${it.key}=${it.value}" })?.join("\$")
         def scenarioName = request?.servletPath?.split('/')?.findAll { it }?.find()
         def actorRef = createActor(scenarioName)
         //forward request
@@ -82,7 +80,6 @@ class ProxyController {
 
     private def handleResponseTime() {
         prepareParams()
-//        def scenarioName = (request?.servletPath?.split('/')?.findAll { it }[1..2] + params?.findAll { it.key != 'rt' }?.sort { it.key }?.collect { "${it.key}=${it.value}" })?.join("\$")
         def scenarioName = request?.servletPath?.split('/')?.findAll { it }?.last()
         def actorRef = createActor(scenarioName)
         actorRef.tell(new OwnResponseTime(value: params.rt?.toInteger()), actorRef)
@@ -147,34 +144,14 @@ class ProxyController {
         def report = SystemConfig.lastReport.clone() as Map
 
         report.put('step', SystemConfig.currentFeedingStep.get())
-
-        def mean = SystemConfig.feedingStepsCount / 2
-        //variance
-        long n = 0;
-        double m = 0;
-        double s = 0.0;
-        def population = 1..SystemConfig.feedingStepsCount
-        population.each {
-            n++;
-            double delta = it - m
-            m += delta / n;
-            s += delta * (it - m)
-        }
-        def variance = s / n
         def result = [
                 scenarios: []
         ]
-
-        def numberOfUsers = SystemConfig.feedingConfig.split(',')[Math.round(SystemConfig.currentFeedingStep.get() / SystemConfig.feedingStepsCount).toInteger()].toInteger()
-        def x = SystemConfig.currentFeedingStep.get() % SystemConfig.feedingStepsCount
         SystemConfig.scenarios.each {
-            def average = (it.value.feedingWeight as Float) * numberOfUsers
             def scenario = [
                     url            : it.key,
                     responseTimeSLA: it.value.responseTimeSLA,
-                    privateIP      : it.value.privateIP,
                     interface      : it.value.interfaceName,
-                    users          : Math.round(Math.pow(Math.exp(-(((x - mean) * (x - mean)) / ((2 * variance)))), 1 / (0.1 * Math.sqrt(2 * Math.PI))) * average).toInteger(),
                     responseTime   : report.responseTimes?.get(it.key),
                     arrivalRate    : report.arrivalRates?.get(it.key) ?: 0,
                     violations     : report.violationsCount?.get(it.key) ?: 0

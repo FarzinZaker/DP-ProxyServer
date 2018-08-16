@@ -28,22 +28,13 @@ public class SshClient
 			try
 			{
 		        ssh.connect(ip);
-		        //ssh.authPublickey("ubuntu", "d:\\Downloads\\Documents\\Amazon\\access\\CornelKeyPairs.pem");
-		        //String keyPath="/Users/Nasim/Workspace/AdaptiveControlWithBW/config/AwsPrivate.key";
 		        ssh.authPublickey("ubuntu", keyPath);
-	
-	            final Session session = ssh.startSession();
-	            try
-	            {
-	                final Command cmd = session.exec(command);
-	                //System.out.println(net.schmizz.sshj.common.IOUtils.readFully(cmd.getInputStream()).toString());
-	                cmd.join(60, TimeUnit.SECONDS);
-	                exitStatus = cmd.getExitStatus();
-	            }
-	            finally
-	            {
-	                session.close();
-	            }
+
+				try (Session session = ssh.startSession()) {
+					final Command cmd = session.exec(command);
+					cmd.join(60, TimeUnit.SECONDS);
+					exitStatus = cmd.getExitStatus();
+				}
 			}
 			catch (java.net.ConnectException ex)
 			{
@@ -51,16 +42,12 @@ public class SshClient
 				{
 					Thread.sleep(5000);
 				}
-				catch (Exception e) { }
+				catch (Exception ignored) { }
 				retry = true;
 			}
 			catch(Exception ex)
 			{
 				Trace.WriteException(ex);
-			}
-			finally
-			{
-				//try { ssh.disconnect(); } catch (Exception e) { Trace.WriteException(e); }
 			}
 		}
 
@@ -85,22 +72,14 @@ public class SshClient
 			try
 			{
 		        ssh.connect(ip);
-		        //ssh.authPublickey("ubuntu", "d:\\Downloads\\Documents\\Amazon\\access\\CornelKeyPairs.pem");
-		        //String keyPath="/Users/Nasim/Workspace/AdaptiveControlWithBW/config/AwsPrivate.key";
 		        ssh.authPublickey("ubuntu", keyPath);
-	
-	            final Session session = ssh.startSession();
-	            try
-	            {
-	                final Command cmd = session.exec(command);
-	                output=net.schmizz.sshj.common.IOUtils.readFully(cmd.getInputStream()).toString();
-	                cmd.join(60, TimeUnit.SECONDS);
-	                exitStatus = cmd.getExitStatus();
-	            }
-	            finally
-	            {
-	                session.close();
-	            }
+
+				try (Session session = ssh.startSession()) {
+					final Command cmd = session.exec(command);
+					output = net.schmizz.sshj.common.IOUtils.readFully(cmd.getInputStream()).toString();
+					cmd.join(60, TimeUnit.SECONDS);
+					exitStatus = cmd.getExitStatus();
+				}
 			}
 			catch (java.net.ConnectException ex)
 			{
@@ -108,16 +87,12 @@ public class SshClient
 				{
 					Thread.sleep(5000);
 				}
-				catch (Exception e) { }
+				catch (Exception ignored) { }
 				retry = true;
 			}
 			catch(Exception ex)
 			{
 				Trace.WriteException(ex);
-			}
-			finally
-			{
-				//try { ssh.disconnect(); } catch (Exception e) { Trace.WriteException(e); }
 			}
 		}
 
@@ -139,8 +114,6 @@ public class SshClient
 		@Override
 		public boolean verify(String hostname, int port, PublicKey key)
 		{
-			//Trace.WriteLine(TraceLevel.INFO, "[%s] [%d] [%s]", hostname, port, key.toString());
-			// do not verify anything. accept any host
 			return true;
 		}
 	}
@@ -163,7 +136,6 @@ public class SshClient
 			try
 			{
 		        ssh.connect(ip);
-		        //ssh.authPublickey("ubuntu", "d:\\Downloads\\Documents\\Amazon\\access\\CornelKeyPairs.pem");
 		        ssh.authPublickey("ubuntu", keyPath);
 		        
 		        ssh.newSCPFileTransfer().upload(pathFile, ".");
@@ -174,22 +146,13 @@ public class SshClient
 				{
 					Thread.sleep(5000);
 				}
-				catch (Exception e) { }
+				catch (Exception ignored) { }
 				retry = true;
 			}
 			catch(Exception ex)
 			{
 				Trace.WriteException(ex);
 			}
-			finally
-			{
-				//try { ssh.disconnect(); } catch (Exception e) { Trace.WriteException(e); }
-			}
 		}
-	}
-	
-	public static void main(String ... args)
-	{
-		SshClient.UploadFile("54.159.98.34", "d:/Downloads/... bulk/Work/Documents/Hogna/hogna.tex");
 	}
 }
