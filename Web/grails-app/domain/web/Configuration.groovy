@@ -44,7 +44,7 @@ class Configuration {
         SystemConfig.feederAddress = feederAddress
         SystemConfig.proxyServerMasterAddress = proxyServerMasterAddress
         SystemConfig.proxyServerSlaveAddress = proxyServerSlaveAddress
-        SystemConfig.loadBalancerAddress = load()
+        SystemConfig.loadBalancerAddress = loadBalancerAddress
         SystemConfig.webServer1Address = webServer1Address
         SystemConfig.webServer2Address = webServer2Address
         SystemConfig.webServer3Address = webServer3Address
