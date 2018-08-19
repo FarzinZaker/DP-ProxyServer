@@ -41,7 +41,7 @@
 
 <g:layoutBody/>
 
-<div class="footer" role="contentinfo" style="color:white">CERAS Labs @ York University</div>
+<div class="footer" role="contentinfo" style="color:white">CERAS Lab @ York University</div>
 
 <div id="spinner" class="spinner" style="display:none;">
     <g:message code="spinner.alt" default="Loading&hellip;"/>

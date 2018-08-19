@@ -19,7 +19,7 @@ class FeedJob {
 
     def execute() {
 
-        if(Environment.isDevelopmentMode())
+        if (Environment.isDevelopmentMode())
             return
 
         if (new File('/etc/bwc/master')?.text?.trim() != '1')
@@ -146,7 +146,7 @@ class FeedJob {
                 def file = new File("/tmp/bwc/${it.key}.csv")
                 if (!file.exists())
                     file.createNewFile()
-                file.append("${recordIndexer}," + it.value.values().join(',') + '\r\n')
+                file.write("${file.text ?: ''}${recordIndexer},${it.value.values().join(',')}\r\n")
             }
         }
     }

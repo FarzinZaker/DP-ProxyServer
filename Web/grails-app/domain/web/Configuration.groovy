@@ -27,7 +27,7 @@ class Configuration {
         webServer2Address(nullable: true)
         webServer3Address(nullable: true)
         databaseAddress(nullable: true)
-        simulationSteps(inList: [1, 25, 50, 75, 100])
+        simulationSteps()
         responseTimeSLAs()
         adaptationOptions()
     }

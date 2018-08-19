@@ -13,7 +13,7 @@
         right: 10px;
         z-index: 1000;
         color: white;
-        background-color: #4D8618;
+        background-color: #4484ce;
         padding: 5px 0 5px 10px;
     }
 
@@ -23,7 +23,7 @@
     }
 
     .stats span span {
-        background-color: #4cae4c;
+        background-color: #f19f4d;
         font-weight: bold;
     }
 

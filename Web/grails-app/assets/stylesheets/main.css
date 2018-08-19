@@ -15,7 +15,7 @@ html {
     background-image: -moz-linear-gradient(center top, #aaa, #ddd);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #aaa), color-stop(1, #ddd));
     background-image: linear-gradient(top, #aaa, #ddd);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr = '#aaaaaa', EndColorStr = '#dddddd');
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#aaaaaa', EndColorStr='#dddddd');
     background-repeat: no-repeat;
     height: 100%;
     /* change the box model to exclude the padding from the calculation of 100% height (IE8+) */
@@ -71,12 +71,15 @@ img {
 }
 
 .content {
+    width: 800px;
+    margin: auto;
 }
 
 .content h1 {
-    border-bottom: 1px solid #CCCCCC;
+    border-bottom: 2px solid #F19F4d;
     margin: 0.8em 1em 0.3em;
     padding: 0 0.25em;
+    padding-bottom: 10px;
 }
 
 .scaffold-list h1 {
@@ -84,13 +87,15 @@ img {
 }
 
 .footer {
-    background: #48802c;
+    background: #F9CF00;
     color: #000;
     clear: both;
     font-size: 0.8em;
     margin-top: 1.5em;
     padding: 1em;
     min-height: 1em;
+    text-align: center;
+    font-size: 14px;
 }
 
 .footer a {
@@ -118,6 +123,8 @@ img {
     overflow: hidden;
     padding-left: 0;
     zoom: 1;
+    background: #d9d9d9;
+    padding: 10px;
 }
 
 .nav li {
@@ -212,6 +219,7 @@ fieldset,
 .fieldcontain .property-value {
     display: block;
     margin-left: 27%;
+    font-weight: bold;
 }
 
 label {
@@ -379,11 +387,11 @@ tr {
     border: 0;
 }
 
-tr>td:first-child, tr>th:first-child {
+tr > td:first-child, tr > th:first-child {
     padding-left: 1.25em;
 }
 
-tr>td:last-child, tr>th:last-child {
+tr > td:last-child, tr > th:last-child {
     padding-right: 1.25em;
 }
 
@@ -398,7 +406,7 @@ th {
     background-color: #efefef;
     background-image: -moz-linear-gradient(top, #ffffff, #eaeaea);
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(1, #eaeaea));
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr = '#ffffff', EndColorStr = '#eaeaea');
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffffff', EndColorStr='#eaeaea');
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffffff', EndColorStr='#eaeaea')";
     color: #666666;
     font-weight: bold;
@@ -494,10 +502,10 @@ th:hover, tr:hover {
 .buttons {
     background-color: #efefef;
     overflow: hidden;
-    padding: 0.3em;
-    -moz-box-shadow: 0 0 3px 1px #aaaaaa;
-    -webkit-box-shadow: 0 0 3px 1px #aaaaaa;
-    box-shadow: 0 0 3px 1px #aaaaaa;
+    padding: 10px;
+    /*-moz-box-shadow: 0 0 3px 1px #aaaaaa;*/
+    /*-webkit-box-shadow: 0 0 3px 1px #aaaaaa;*/
+    /*box-shadow: 0 0 3px 1px #aaaaaa;*/
     margin: 0.1em 0 0 0;
     border: none;
 }
@@ -561,14 +569,30 @@ a.skip {
 }
 
 .grails-logo-container {
-    background:#79b94c no-repeat 50% 30%;
+    background: #79b94c no-repeat 50% 30%;
     margin-bottom: 20px;
     color: white;
-    height:300px;
-    text-align:center;
+    height: 300px;
+    text-align: center;
 }
 
 img.grails-logo {
-    height:340px;
-    margin-top:-10px;
+    height: 340px;
+    margin-top: -10px;
+}
+
+.fieldcontain ul {
+    display: inline-block;
+    margin-left: 20px;
+    vertical-align: top;
+}
+
+.fieldcontain ul + a {
+    display: block;
+    margin-top:20px;
+    text-align: right;
+}
+
+.fieldcontain label {
+    margin-right: 20px;
 }

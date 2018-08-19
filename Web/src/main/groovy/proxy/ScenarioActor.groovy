@@ -301,11 +301,11 @@ class ScenarioActor extends UntypedAbstractActor {
 
     private void increaseNumberOfServers() {
         if (serversCount?.get() == 1) {
-            RemoteController.executeCommand('', "sudo sed -i 's/#server 10.1.0.52:8080/server 10.1.0.52:8080/g' /etc/nginx/nginx.conf")
+            RemoteController.executeCommand('', "sudo sed -i 's/#server ${SystemConfig.webServer2Address}:8080/server ${SystemConfig.webServer2Address}:8080/g' /etc/nginx/nginx.conf")
             serversCount.incrementAndGet()
             println "SERVERS COUNT INCREASED: ${serversCount?.get()}"
         } else if (serversCount?.get() == 2) {
-            RemoteController.executeCommand('', "sudo sed -i 's/#server 10.1.0.53:8080/server 10.1.0.53:8080/g' /etc/nginx/nginx.conf")
+            RemoteController.executeCommand('', "sudo sed -i 's/#server ${SystemConfig.webServer3Address}:8080/server ${SystemConfig.webServer3Address}:8080/g' /etc/nginx/nginx.conf")
             serversCount.incrementAndGet()
             println "SERVERS COUNT INCREASED: ${serversCount?.get()}"
         }
@@ -313,11 +313,11 @@ class ScenarioActor extends UntypedAbstractActor {
 
     private void decreaseNumberOfServers() {
         if (serversCount?.get() == 2) {
-            RemoteController.executeCommand('', "sudo sed -i 's/server 10.1.0.52:8080/#server 10.1.0.52:8080/g' /etc/nginx/nginx.conf")
+            RemoteController.executeCommand('', "sudo sed -i 's/server ${SystemConfig.webServer2Address}:8080/#server ${SystemConfig.webServer2Address}:8080/g' /etc/nginx/nginx.conf")
             serversCount.decrementAndGet()
             println "SERVERS COUNT DECREASED: ${serversCount?.get()}"
         } else if (serversCount?.get() == 3) {
-            RemoteController.executeCommand('', "sudo sed -i 's/server 10.1.0.53:8080/#server 10.1.0.53:8080/g' /etc/nginx/nginx.conf")
+            RemoteController.executeCommand('', "sudo sed -i 's/server ${SystemConfig.webServer3Address}:8080/#server ${SystemConfig.webServer3Address}:8080/g' /etc/nginx/nginx.conf")
             serversCount.decrementAndGet()
             println "SERVERS COUNT DECREASED: ${serversCount?.get()}"
         }
