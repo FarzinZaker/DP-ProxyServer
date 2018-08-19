@@ -66,7 +66,7 @@ class BandWidthActor extends UntypedAbstractActor {
         if (!Environment.isDevelopmentMode()) {
             bandWidths.each { bandWidth ->
                 def newBandwidth = Math.round((bandWidth.value as Float) * SystemConfig.totalBandwidth)?.toInteger()
-                def minBandwidth = 100 * ScenarioActor.lastArrivalRates[bandWidth.key] * 2
+                def minBandwidth = 100 * (ScenarioActor.lastArrivalRates[bandWidth.key] ?: 1) * 2
                 if (newBandwidth < minBandwidth)
                     newBandwidth = minBandwidth
                 realBandWidth.put(bandWidth.key, newBandwidth)
