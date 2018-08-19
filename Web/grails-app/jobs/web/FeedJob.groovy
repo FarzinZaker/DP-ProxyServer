@@ -146,7 +146,7 @@ class FeedJob {
                 def file = new File("/tmp/bwc/${it.key}.csv")
                 if (!file.exists())
                     file.createNewFile()
-                file.write("${file.text ?: ''}${recordIndexer},${it.value.values().join(',')}\r\n")
+                file.append("${recordIndexer},${it.value.values().join(',')}\r\n")
             }
         }
     }
